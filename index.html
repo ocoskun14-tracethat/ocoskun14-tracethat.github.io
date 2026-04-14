@@ -947,13 +947,14 @@ async function startScan() {
   const status = document.getElementById('scanStatus');
   const video  = document.getElementById('scan-video');
   if (scanActive) return;
-  if (!navigator.mediaDevices?.getUserMedia) {
-    status.textContent = 'Caméra non disponible.'; return;
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    status.textContent = 'Caméra non disponible sur ce navigateur.';
+    return;
   }
   try {
     status.textContent = 'Activation caméra…';
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: 'environment' }, width:{ideal:1920}, height:{ideal:1080} }
+      video: { facingMode: 'environment', width:{ideal:1280}, height:{ideal:720} }
     });
     video.srcObject = stream;
     await video.play();
