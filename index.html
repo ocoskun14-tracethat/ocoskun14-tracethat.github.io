@@ -6,179 +6,392 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="TraceThat">
-<meta name="theme-color" content="#fafaf8">
-<title>TraceThat — Trace that brand. Qui possède vraiment ce que vous achetez ?</title>
+<meta name="theme-color" content="#0a0a0a">
+<title>TraceThat — Trace that brand.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
 :root {
-  --rouge:#A32D2D; --rouge-bg:#FCEBEB; --rouge-bd:#F09595;
-  --orange:#854F0B; --orange-bg:#FAEEDA; --orange-bd:#EF9F27;
-  --vert:#27500A; --vert-bg:#EAF3DE; --vert-bd:#97C459;
-  --bleu:#185FA5; --bleu-bg:#E6F1FB; --bleu-bd:#85B7EB;
-  --gris:#5F5E5A; --gris-bg:#F1EFE8;
-  --fond:#fafaf8; --surface:#ffffff;
-  --texte:#1a1a18; --texte2:#5F5E5A; --texte3:#888780;
-  --border:#e0dfd8; --radius:14px;
+  --rouge: #E8341A;
+  --orange: #F5A623;
+  --vert: #27AE60;
+  --fond: #0a0a0a;
+  --surface: #141414;
+  --surface2: #1e1e1e;
+  --border: rgba(255,255,255,0.08);
+  --texte: #f0ede8;
+  --texte2: rgba(240,237,232,0.55);
+  --texte3: rgba(240,237,232,0.3);
+  --accent: #E8341A;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top: env(safe-area-inset-top, 0px);
 }
-* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
-html, body { height:100%; }
-body {
-  font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;
-  background:var(--fond); color:var(--texte);
-  overflow-x:hidden;
-}
 
-/* ─── NAV TABS (bottom, iPhone style) ─── */
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { height:100%; background:var(--fond); color:var(--texte); overflow-x:hidden; }
+body { font-family:'DM Sans', sans-serif; }
+
+/* ─── PAGES ─── */
+.page { display:none; flex-direction:column; min-height:100vh; padding-bottom:calc(72px + var(--safe-bottom)); }
+.page.active { display:flex; }
+
+/* ─── TAB BAR ─── */
 .tab-bar {
   position:fixed; bottom:0; left:0; right:0;
-  background:rgba(250,250,248,.92);
-  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  background:rgba(10,10,10,0.92);
+  backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
   border-top:1px solid var(--border);
-  display:flex;
-  padding-bottom:var(--safe-bottom);
-  z-index:200;
+  display:flex; padding-bottom:var(--safe-bottom); z-index:200;
 }
 .tab {
   flex:1; display:flex; flex-direction:column; align-items:center;
-  padding:8px 0 4px; cursor:pointer; border:none; background:none;
-  color:var(--texte3); font-size:10px; font-weight:500; gap:3px;
-  transition:color .15s;
+  padding:10px 0 6px; cursor:pointer; border:none; background:none;
+  color:var(--texte3); font-size:10px; font-weight:500; gap:4px;
+  font-family:'DM Sans', sans-serif; letter-spacing:.03em;
+  transition:color .2s;
 }
-.tab.active { color:#3B6D11; }
 .tab svg { width:22px; height:22px; }
-.tab-scan {
-  flex:1.4; position:relative;
-}
+.tab.active { color:var(--texte); }
+.tab-scan { flex:1.4; position:relative; }
 .tab-scan-btn {
-  position:absolute; top:-22px; left:50%; transform:translateX(-50%);
-  width:56px; height:56px; border-radius:50%;
-  background:#3B6D11; border:4px solid var(--fond);
+  position:absolute; top:-24px; left:50%; transform:translateX(-50%);
+  width:60px; height:60px; border-radius:50%;
+  background:var(--rouge); border:4px solid var(--fond);
   display:flex; align-items:center; justify-content:center;
-  cursor:pointer; box-shadow:0 4px 16px rgba(59,109,17,.4);
+  cursor:pointer; box-shadow:0 0 30px rgba(232,52,26,.5);
   transition:transform .15s, box-shadow .15s;
 }
-.tab-scan-btn:active { transform:translateX(-50%) scale(.94); box-shadow:0 2px 8px rgba(59,109,17,.3); }
+.tab-scan-btn:active { transform:translateX(-50%) scale(.92); }
 .tab-scan-btn svg { width:26px; height:26px; color:#fff; }
-.tab-scan-label { margin-top:30px; font-size:10px; font-weight:600; color:#3B6D11; }
+.tab-scan-label { margin-top:32px; font-size:10px; font-weight:500; color:var(--texte3); }
+.tab.active .tab-scan-label { color:var(--texte); }
 
-/* ─── PAGES ─── */
-.page { display:none; flex-direction:column; height:100vh; padding-bottom:calc(60px + var(--safe-bottom)); }
-.page.active { display:flex; }
-
-/* ─── HEADER ─── */
-.page-header {
-  padding:calc(var(--safe-top) + 12px) 16px 12px;
-  background:var(--surface); border-bottom:1px solid var(--border);
-  position:sticky; top:0; z-index:100;
-}
-.page-title { font-size:22px; font-weight:700; letter-spacing:-.5px; }
-.page-title span { color:#3B6D11; }
-.page-sub { font-size:12px; color:var(--texte3); margin-top:2px; }
-.stats-row { display:flex; gap:16px; margin-top:10px; }
-.stat-chip { background:var(--gris-bg); border-radius:20px; padding:4px 12px; font-size:12px; }
-.stat-chip strong { color:var(--rouge); }
-.stat-chip.g strong { color:var(--vert); }
-
-/* ─── SEARCH ─── */
-.search-wrap { padding:10px 16px; background:var(--surface); border-bottom:1px solid var(--border); }
-.search-inner { position:relative; }
-.search-inner input {
-  width:100%; padding:11px 40px 11px 40px;
-  border:1.5px solid var(--border); border-radius:12px;
-  font-size:16px; background:var(--gris-bg); color:var(--texte); outline:none;
-  -webkit-appearance:none;
-}
-.search-inner input:focus { background:var(--surface); border-color:#639922; }
-.si-icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--texte3); pointer-events:none; }
-.si-clear { position:absolute; right:10px; top:50%; transform:translateY(-50%); border:none; background:none; color:var(--texte3); font-size:18px; cursor:pointer; display:none; padding:4px; }
-
-/* ─── SCROLL CONTENT ─── */
-.scroll-content { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:12px 16px 16px; }
-
-/* ─── FILTRES ─── */
-.filtres { display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; margin-bottom:12px; }
-.filtres::-webkit-scrollbar { display:none; }
-.chip { padding:6px 14px; border-radius:20px; font-size:12px; font-weight:500; cursor:pointer; border:1.5px solid var(--border); background:var(--surface); color:var(--texte2); white-space:nowrap; user-select:none; }
-.chip.active { background:var(--rouge-bg); border-color:var(--rouge-bd); color:var(--rouge); }
-.chip.active.v { background:var(--vert-bg); border-color:var(--vert-bd); color:var(--vert); }
-.chip.active.o { background:var(--orange-bg); border-color:var(--orange-bd); color:var(--orange); }
-
-/* ─── SECTION LABEL ─── */
-.slbl { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--texte3); margin:12px 0 6px; }
-
-/* ─── MARQUE CARD ─── */
-.mcard {
-  border-radius:var(--radius); border:1px solid var(--border);
-  background:var(--surface); margin-bottom:8px; overflow:hidden; cursor:pointer;
-}
-.mcard.rouge { border-left:3px solid var(--rouge); }
-.mcard.orange { border-left:3px solid #EF9F27; }
-.mcard.vert { border-left:3px solid #639922; }
-.mcard-hdr { display:flex; align-items:center; gap:10px; padding:13px 14px; }
-.ndot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
-.ndot.rouge { background:var(--rouge); }
-.ndot.orange { background:#EF9F27; }
-.ndot.vert { background:#639922; }
-.mcard-nom { font-weight:600; font-size:15px; flex:1; line-height:1.2; }
-.mcard-grp { font-size:12px; color:var(--texte2); margin-top:2px; }
-.mcard-arr { color:var(--texte3); font-size:13px; transition:transform .2s; }
-.mcard.open .mcard-arr { transform:rotate(90deg); }
-.mcard-detail { display:none; border-top:1px solid var(--border); padding:12px 14px; background:var(--fond); }
-.mcard.open .mcard-detail { display:block; }
-
-/* ─── DETAIL CONTENT ─── */
-.apparence { background:var(--gris-bg); border-radius:8px; padding:8px 10px; font-size:12px; color:var(--gris); font-style:italic; margin-bottom:10px; }
-.chain-row { display:flex; gap:8px; margin-bottom:5px; font-size:13px; align-items:flex-start; }
-.clbl { min-width:72px; font-size:11px; font-weight:600; text-transform:uppercase; color:var(--texte3); padding-top:1px; }
-.cval { color:var(--texte); }
-.cval.r { color:var(--rouge); font-weight:600; }
-.cval.o { color:var(--orange); }
-.sanctions { background:var(--rouge-bg); border-left:3px solid var(--rouge); padding:8px 10px; border-radius:0 6px 6px 0; font-size:12px; color:var(--rouge); margin:10px 0; line-height:1.5; }
-.alt-hdr { font-size:11px; font-weight:600; color:var(--vert); text-transform:uppercase; letter-spacing:.08em; margin:10px 0 6px; }
-.alt-item { display:flex; gap:8px; padding:7px 0; border-top:1px solid var(--border); align-items:flex-start; }
-.alt-score { width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; }
-.alt-score.A { background:var(--vert-bg); color:var(--vert); }
-.alt-score.B { background:var(--bleu-bg); color:var(--bleu); }
-.alt-nom { font-size:13px; font-weight:600; }
-.alt-desc { font-size:12px; color:var(--texte2); line-height:1.4; }
-.alt-tags { display:flex; gap:4px; flex-wrap:wrap; margin-top:4px; }
-.atag { font-size:10px; padding:2px 7px; border-radius:10px; background:var(--vert-bg); color:var(--vert); font-weight:500; }
-
-/* ─── QUICK GRID ─── */
-.quick-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:12px; }
-.qbtn { padding:10px 12px; border-radius:10px; border:1px solid var(--rouge-bd); background:var(--rouge-bg); cursor:pointer; text-align:left; }
-.qbtn:active { opacity:.7; }
-.qbtn-nom { font-size:13px; font-weight:600; color:var(--rouge); }
-.qbtn-grp { font-size:11px; color:#993C1D; margin-top:2px; }
-
-/* ─── EMPTY ─── */
-.empty { text-align:center; padding:3rem 1rem; color:var(--texte3); }
-.empty-ico { font-size:40px; margin-bottom:12px; }
-
-/* ══════════════════════════════════════════════
-   PAGE SCAN
-══════════════════════════════════════════════ */
-#page-scan .page-header { text-align:center; }
-
-.scan-zone {
-  position:relative; background:#000;
-  flex:1; display:flex; align-items:center; justify-content:center;
+/* ══════════════════════════════
+   PAGE ACCUEIL
+══════════════════════════════ */
+#page-accueil {
+  background:var(--fond);
+  position:relative;
   overflow:hidden;
 }
-#scan-video { width:100%; height:100%; object-fit:cover; }
 
+/* Fond grain texture */
+#page-accueil::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none; z-index:0;
+}
+
+.accueil-inner {
+  position:relative; z-index:1;
+  display:flex; flex-direction:column;
+  min-height:calc(100vh - 72px);
+  padding:calc(var(--safe-top) + 20px) 24px 32px;
+}
+
+/* Logo */
+.accueil-logo {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:48px;
+}
+.accueil-logo img { height:36px; object-fit:contain; filter:brightness(1.1); }
+.logo-badge {
+  font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--texte3); border:1px solid var(--border); padding:4px 10px;
+  border-radius:20px;
+}
+
+/* Hero */
+.hero {
+  flex:1;
+  display:flex; flex-direction:column; justify-content:center;
+  padding:20px 0 40px;
+}
+
+.hero-eyebrow {
+  font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--rouge); margin-bottom:16px;
+  display:flex; align-items:center; gap:8px;
+}
+.hero-eyebrow::before {
+  content:''; width:20px; height:1px; background:var(--rouge);
+}
+
+.hero-title {
+  font-family:'Syne', sans-serif;
+  font-size:clamp(32px, 8vw, 44px);
+  font-weight:800; line-height:1.05;
+  letter-spacing:-.02em;
+  margin-bottom:20px;
+}
+.hero-title em {
+  font-style:normal; color:var(--rouge);
+  position:relative;
+}
+
+.hero-sub {
+  font-size:15px; line-height:1.6;
+  color:var(--texte2); max-width:320px;
+  margin-bottom:40px;
+}
+
+/* Stat choc */
+.hero-stat {
+  display:inline-flex; align-items:baseline; gap:8px;
+  background:var(--surface); border:1px solid var(--border);
+  border-left:3px solid var(--rouge);
+  padding:12px 16px; border-radius:0 10px 10px 0;
+  margin-bottom:40px;
+}
+.hero-stat-num {
+  font-family:'Syne', sans-serif; font-size:28px; font-weight:800;
+  color:var(--rouge);
+}
+.hero-stat-label { font-size:13px; color:var(--texte2); line-height:1.3; }
+
+/* CTA Scanner */
+.cta-scan {
+  display:flex; flex-direction:column; gap:12px;
+}
+
+.btn-primary {
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  background:var(--rouge); color:#fff;
+  padding:18px 24px; border-radius:14px; border:none;
+  font-family:'Syne', sans-serif; font-size:16px; font-weight:700;
+  letter-spacing:-.01em; cursor:pointer;
+  box-shadow:0 8px 32px rgba(232,52,26,.35);
+  transition:transform .15s, box-shadow .15s;
+}
+.btn-primary:active { transform:scale(.97); box-shadow:0 4px 16px rgba(232,52,26,.25); }
+.btn-primary svg { width:20px; height:20px; }
+
+.btn-secondary {
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  background:var(--surface); color:var(--texte2);
+  padding:16px 24px; border-radius:14px;
+  border:1px solid var(--border);
+  font-size:15px; font-weight:500; cursor:pointer;
+  transition:background .15s, color .15s;
+}
+.btn-secondary:active { background:var(--surface2); color:var(--texte); }
+.btn-secondary svg { width:18px; height:18px; }
+
+/* Exemples indie washing */
+.exemples {
+  margin-top:48px;
+}
+.exemples-title {
+  font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--texte3); margin-bottom:16px;
+}
+.exemples-list {
+  display:flex; flex-direction:column; gap:8px;
+}
+.exemple-card {
+  display:flex; align-items:center; gap:14px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:12px; padding:14px 16px;
+  cursor:pointer; transition:border-color .2s, background .2s;
+}
+.exemple-card:active { background:var(--surface2); border-color:rgba(255,255,255,.15); }
+.exemple-dot {
+  width:8px; height:8px; border-radius:50%;
+  background:var(--rouge); flex-shrink:0;
+  box-shadow:0 0 8px rgba(232,52,26,.6);
+}
+.exemple-info { flex:1; }
+.exemple-marque {
+  font-family:'Syne', sans-serif; font-size:14px; font-weight:700;
+  color:var(--texte); letter-spacing:-.01em;
+}
+.exemple-groupe { font-size:12px; color:var(--texte3); margin-top:1px; }
+.exemple-arrow { color:var(--texte3); font-size:16px; }
+.exemple-reveal {
+  font-size:11px; font-weight:600; text-transform:uppercase;
+  letter-spacing:.08em; color:var(--rouge);
+  background:rgba(232,52,26,.1); padding:3px 8px; border-radius:6px;
+}
+
+/* ══════════════════════════════
+   PAGE RECHERCHE
+══════════════════════════════ */
+#page-recherche { background:var(--fond); }
+
+.search-header {
+  padding:calc(var(--safe-top) + 16px) 20px 12px;
+  background:rgba(10,10,10,0.95);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  position:sticky; top:0; z-index:100;
+}
+.search-header-top {
+  display:flex; align-items:center; gap:12px; margin-bottom:12px;
+}
+.search-header-top img { height:28px; object-fit:contain; }
+.search-back {
+  background:none; border:none; color:var(--texte2);
+  font-size:14px; cursor:pointer; padding:4px 0;
+  display:flex; align-items:center; gap:6px;
+}
+
+.search-wrap-inner { position:relative; }
+.search-wrap-inner input {
+  width:100%; padding:13px 44px 13px 44px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:12px; font-size:16px; color:var(--texte);
+  font-family:'DM Sans', sans-serif; outline:none;
+  -webkit-appearance:none; transition:border-color .2s;
+}
+.search-wrap-inner input:focus { border-color:rgba(232,52,26,.5); }
+.search-wrap-inner input::placeholder { color:var(--texte3); }
+.si-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--texte3); pointer-events:none; }
+.si-clear { position:absolute; right:12px; top:50%; transform:translateY(-50%); border:none; background:none; color:var(--texte3); font-size:18px; cursor:pointer; display:none; padding:4px; }
+
+.filtres-scroll {
+  display:flex; gap:6px; overflow-x:auto; padding:10px 20px 0;
+}
+.filtres-scroll::-webkit-scrollbar { display:none; }
+.chip {
+  padding:6px 14px; border-radius:20px; font-size:12px; font-weight:500;
+  cursor:pointer; border:1px solid var(--border); background:var(--surface);
+  color:var(--texte2); white-space:nowrap; user-select:none;
+  font-family:'DM Sans', sans-serif; transition:all .15s;
+}
+.chip.active { background:var(--rouge); border-color:var(--rouge); color:#fff; }
+.chip.active.o { background:#F5A623; border-color:#F5A623; color:#000; }
+.chip.active.v { background:var(--vert); border-color:var(--vert); color:#fff; }
+
+.scroll-content { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:12px 16px 16px; }
+
+/* ─── MARQUE CARD ─── */
+.slbl {
+  font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--texte3); margin:16px 0 8px; padding:0 4px;
+}
+
+.mcard {
+  border-radius:12px; border:1px solid var(--border);
+  background:var(--surface); margin-bottom:6px; overflow:hidden;
+  cursor:pointer; transition:border-color .2s;
+}
+.mcard:active { background:var(--surface2); }
+.mcard.rouge { border-left:3px solid var(--rouge); }
+.mcard.orange { border-left:3px solid var(--orange); }
+.mcard.vert { border-left:3px solid var(--vert); }
+.mcard-hdr { display:flex; align-items:center; gap:10px; padding:14px 16px; }
+.ndot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.ndot.rouge { background:var(--rouge); box-shadow:0 0 6px rgba(232,52,26,.6); }
+.ndot.orange { background:var(--orange); }
+.ndot.vert { background:var(--vert); }
+.mcard-nom { font-family:'Syne', sans-serif; font-weight:700; font-size:15px; flex:1; letter-spacing:-.01em; color:var(--texte); }
+.mcard-grp { font-size:11px; color:var(--texte3); margin-top:2px; }
+.mcard-arr { color:var(--texte3); font-size:13px; transition:transform .2s; }
+.mcard.open .mcard-arr { transform:rotate(90deg); }
+.mcard-detail {
+  display:none; border-top:1px solid var(--border);
+  padding:16px; background:rgba(0,0,0,.3);
+}
+.mcard.open .mcard-detail { display:block; }
+
+/* Detail */
+.apparence {
+  background:rgba(255,255,255,.04); border-radius:8px;
+  padding:10px 12px; font-size:12px; color:var(--texte3);
+  font-style:italic; margin-bottom:12px;
+  border-left:2px solid var(--orange);
+}
+.chain-row { display:flex; gap:10px; margin-bottom:6px; font-size:13px; align-items:flex-start; }
+.clbl { min-width:80px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:var(--texte3); padding-top:1px; }
+.cval { color:var(--texte2); }
+.cval.r { color:var(--rouge); font-weight:600; }
+.cval.o { color:var(--orange); }
+.sanctions {
+  background:rgba(232,52,26,.08); border-left:2px solid var(--rouge);
+  padding:10px 12px; border-radius:0 8px 8px 0;
+  font-size:12px; color:rgba(232,52,26,.9); margin:12px 0; line-height:1.5;
+}
+
+/* Score */
+.score-bar { display:flex; align-items:center; gap:12px; margin:12px 0; }
+.score-circle {
+  width:44px; height:44px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:700; flex-shrink:0;
+  font-family:'Syne', sans-serif;
+}
+.score-circle.rouge { background:rgba(232,52,26,.15); color:var(--rouge); border:1.5px solid rgba(232,52,26,.4); }
+.score-circle.orange { background:rgba(245,166,35,.15); color:var(--orange); border:1.5px solid rgba(245,166,35,.4); }
+.score-circle.vert { background:rgba(39,174,96,.15); color:var(--vert); border:1.5px solid rgba(39,174,96,.4); }
+
+.tag-list { display:flex; gap:4px; flex-wrap:wrap; margin:8px 0; }
+.tag {
+  font-size:10px; padding:3px 8px; border-radius:6px;
+  font-weight:600; text-transform:uppercase; letter-spacing:.05em;
+}
+.tag.multinationale { background:rgba(232,52,26,.12); color:var(--rouge); }
+.tag.indie-washing { background:rgba(245,166,35,.12); color:var(--orange); }
+.tag.sanitaire { background:rgba(232,52,26,.12); color:var(--rouge); }
+.tag.juridique { background:rgba(245,166,35,.12); color:var(--orange); }
+.tag.social { background:rgba(100,180,255,.12); color:#64b4ff; }
+.tag.indépendant { background:rgba(39,174,96,.12); color:var(--vert); }
+.tag.dominant, .tag.ultra-dominant { background:rgba(232,52,26,.12); color:var(--rouge); }
+.reasons-list { font-size:12px; color:var(--texte3); margin:6px 0; list-style:none; }
+.reasons-list li { margin-bottom:3px; }
+
+.fake-artisan-badge {
+  display:inline-flex; align-items:center; gap:6px;
+  background:rgba(245,166,35,.12); color:var(--orange);
+  font-size:11px; font-weight:700; padding:5px 10px;
+  border-radius:8px; margin-bottom:12px;
+  border:1px solid rgba(245,166,35,.2);
+}
+
+/* Alternatives */
+.alt-hdr {
+  font-size:10px; font-weight:600; color:var(--vert);
+  text-transform:uppercase; letter-spacing:.1em; margin:14px 0 8px;
+}
+.alt-item { display:flex; gap:10px; padding:8px 0; border-top:1px solid var(--border); align-items:flex-start; }
+.alt-score { width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; }
+.alt-score.A { background:rgba(39,174,96,.15); color:var(--vert); }
+.alt-score.B { background:rgba(100,180,255,.15); color:#64b4ff; }
+.alt-nom { font-size:13px; font-weight:600; color:var(--texte); }
+.alt-desc { font-size:12px; color:var(--texte3); line-height:1.4; }
+.alt-tags { display:flex; gap:4px; flex-wrap:wrap; margin-top:4px; }
+.atag { font-size:10px; padding:2px 7px; border-radius:6px; background:rgba(39,174,96,.1); color:var(--vert); font-weight:500; }
+
+/* Quick grid */
+.quick-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; }
+.qbtn {
+  padding:12px; border-radius:10px; border:1px solid rgba(232,52,26,.2);
+  background:rgba(232,52,26,.06); cursor:pointer; text-align:left;
+  transition:background .15s;
+}
+.qbtn:active { background:rgba(232,52,26,.12); }
+.qbtn-nom { font-family:'Syne', sans-serif; font-size:13px; font-weight:700; color:var(--texte); }
+.qbtn-grp { font-size:11px; color:var(--rouge); margin-top:2px; opacity:.8; }
+
+.empty { text-align:center; padding:4rem 1rem; color:var(--texte3); }
+.empty-ico { font-size:36px; margin-bottom:12px; opacity:.5; }
+
+/* ══════════════════════════════
+   PAGE SCAN
+══════════════════════════════ */
+#page-scan { background:var(--fond); }
+.scan-zone {
+  position:relative; background:#000; flex:1;
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+}
+#scan-video { width:100%; height:100%; object-fit:cover; }
 .scan-overlay {
-  position:absolute; inset:0;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  pointer-events:none;
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; pointer-events:none;
 }
-.scan-frame {
-  width:260px; height:140px; position:relative;
-}
-.scan-frame::before, .scan-frame::after,
-.scan-frame .c1, .scan-frame .c2 {
-  content:''; position:absolute; width:24px; height:24px; border-color:#fff; border-style:solid;
+.scan-frame { width:260px; height:140px; position:relative; }
+.scan-frame::before, .scan-frame::after, .scan-frame .c1, .scan-frame .c2 {
+  content:''; position:absolute; width:24px; height:24px;
+  border-color:rgba(232,52,26,.9); border-style:solid;
 }
 .scan-frame::before { top:0; left:0; border-width:3px 0 0 3px; border-radius:3px 0 0 0; }
 .scan-frame::after  { top:0; right:0; border-width:3px 3px 0 0; border-radius:0 3px 0 0; }
@@ -186,146 +399,189 @@ body {
 .scan-frame .c2     { bottom:0; right:0; border-width:0 3px 3px 0; border-radius:0 0 3px 0; }
 .scan-line {
   position:absolute; left:4px; right:4px; height:2px;
-  background:rgba(99,153,34,.9); border-radius:1px;
+  background:rgba(232,52,26,.9); border-radius:1px;
   animation:scanline 2s ease-in-out infinite;
 }
 @keyframes scanline { 0%,100%{top:4px} 50%{top:calc(100% - 6px)} }
-.scan-hint { color:rgba(255,255,255,.8); font-size:13px; margin-top:20px; text-align:center; padding:0 20px; }
+.scan-hint { color:rgba(255,255,255,.6); font-size:13px; margin-top:20px; }
 
-.scan-controls { padding:16px; background:var(--surface); border-top:1px solid var(--border); }
+.scan-controls {
+  padding:16px 20px; background:var(--surface);
+  border-top:1px solid var(--border);
+}
 .scan-input-row { display:flex; gap:8px; }
 .scan-input-row input {
-  flex:1; padding:12px 14px; border:1.5px solid var(--border); border-radius:12px;
-  font-size:16px; background:var(--gris-bg); color:var(--texte); outline:none;
-  -webkit-appearance:none;
+  flex:1; padding:13px 14px; border:1px solid var(--border);
+  border-radius:12px; font-size:16px; background:rgba(255,255,255,.05);
+  color:var(--texte); font-family:'DM Sans', sans-serif; outline:none;
 }
-.scan-input-row input:focus { background:var(--surface); border-color:#639922; }
+.scan-input-row input:focus { border-color:rgba(232,52,26,.4); }
+.scan-input-row input::placeholder { color:var(--texte3); }
 .btn-scan-lookup {
-  padding:12px 18px; background:#3B6D11; color:#EAF3DE; border:none;
-  border-radius:12px; font-size:14px; font-weight:600; cursor:pointer;
+  padding:13px 18px; background:var(--rouge); color:#fff; border:none;
+  border-radius:12px; font-size:14px; font-weight:700;
+  font-family:'Syne', sans-serif; cursor:pointer;
 }
-.btn-scan-lookup:active { background:#27500A; }
-.scan-status { text-align:center; font-size:13px; color:var(--texte3); margin-top:10px; min-height:20px; }
+.scan-status { text-align:center; font-size:12px; color:var(--texte3); margin-top:10px; min-height:18px; }
 
-/* ─── RÉSULTAT SCAN ─── */
+/* Résultat scan */
 .scan-result {
   position:fixed; inset:0; z-index:500;
-  background:rgba(0,0,0,.6); display:flex; align-items:flex-end;
+  background:rgba(0,0,0,.75); display:flex; align-items:flex-end;
   animation:fadeIn .2s;
 }
 @keyframes fadeIn { from{opacity:0} to{opacity:1} }
 .scan-result-sheet {
   background:var(--surface); border-radius:24px 24px 0 0;
   width:100%; max-height:85vh; overflow-y:auto;
-  padding:0 0 calc(16px + var(--safe-bottom));
+  padding:0 0 calc(20px + var(--safe-bottom));
   animation:slideUp .25s ease-out;
+  border-top:1px solid var(--border);
 }
 @keyframes slideUp { from{transform:translateY(60px);opacity:0} to{transform:translateY(0);opacity:1} }
-.sheet-handle { width:36px; height:4px; background:var(--border); border-radius:2px; margin:12px auto 0; }
-.sheet-content { padding:16px 16px 0; }
-.sheet-close { float:right; font-size:22px; color:var(--texte3); cursor:pointer; background:var(--gris-bg); border:none; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; }
-.sheet-produit { font-size:13px; color:var(--texte3); margin-bottom:6px; }
-.sheet-niveau { display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:12px; }
-.sheet-niveau.rouge { background:var(--rouge-bg); color:var(--rouge); }
-.sheet-niveau.orange { background:var(--orange-bg); color:var(--orange); }
-.sheet-niveau.vert { background:var(--vert-bg); color:var(--vert); }
-.sheet-niveau.inconnu { background:var(--gris-bg); color:var(--gris); }
-.sheet-marque { font-size:20px; font-weight:700; margin-bottom:4px; }
+.sheet-handle { width:32px; height:3px; background:rgba(255,255,255,.15); border-radius:2px; margin:14px auto 0; }
+.sheet-content { padding:16px 20px 0; }
+.sheet-close {
+  float:right; font-size:18px; color:var(--texte3); cursor:pointer;
+  background:rgba(255,255,255,.08); border:none; border-radius:50%;
+  width:30px; height:30px; display:flex; align-items:center; justify-content:center;
+}
+.sheet-produit { font-size:12px; color:var(--texte3); margin-bottom:4px; }
+.sheet-marque { font-family:'Syne', sans-serif; font-size:20px; font-weight:800; margin-bottom:8px; color:var(--texte); letter-spacing:-.02em; }
+.sheet-niveau {
+  display:inline-flex; align-items:center; gap:6px; padding:5px 12px;
+  border-radius:8px; font-size:12px; font-weight:700; margin-bottom:14px;
+  text-transform:uppercase; letter-spacing:.05em;
+}
+.sheet-niveau.rouge { background:rgba(232,52,26,.12); color:var(--rouge); border:1px solid rgba(232,52,26,.2); }
+.sheet-niveau.orange { background:rgba(245,166,35,.12); color:var(--orange); border:1px solid rgba(245,166,35,.2); }
+.sheet-niveau.vert { background:rgba(39,174,96,.12); color:var(--vert); border:1px solid rgba(39,174,96,.2); }
+.sheet-niveau.inconnu { background:rgba(255,255,255,.06); color:var(--texte3); }
 
-/* ─── PAGE ALTERNATIVES ─── */
-.cat-section { margin-bottom:20px; }
-.cat-title { font-size:16px; font-weight:700; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
-.cat-badge { width:8px; height:8px; border-radius:50%; background:#639922; }
-.alt-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:13px 14px; margin-bottom:6px; }
-.alt-card-nom { font-size:14px; font-weight:600; margin-bottom:3px; display:flex; align-items:center; gap:6px; }
-.alt-card-desc { font-size:13px; color:var(--texte2); line-height:1.4; }
+/* ══════════════════════════════
+   PAGE ALTERNATIVES
+══════════════════════════════ */
+#page-alternatives { background:var(--fond); }
+.page-header-dark {
+  padding:calc(var(--safe-top) + 16px) 20px 14px;
+  background:rgba(10,10,10,0.95);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  position:sticky; top:0; z-index:100;
+}
+.page-title-dark {
+  font-family:'Syne', sans-serif; font-size:22px; font-weight:800;
+  letter-spacing:-.03em; color:var(--texte);
+}
+.page-title-dark span { color:var(--vert); }
+.page-sub-dark { font-size:12px; color:var(--texte3); margin-top:3px; }
+
+.cat-section { margin-bottom:24px; }
+.cat-title {
+  font-family:'Syne', sans-serif; font-size:15px; font-weight:700;
+  margin:0 0 10px; color:var(--texte); letter-spacing:-.01em;
+  display:flex; align-items:center; gap:8px;
+}
+.cat-badge { width:6px; height:6px; border-radius:50%; background:var(--vert); }
+.alt-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:12px; padding:14px 16px; margin-bottom:8px;
+}
+.alt-card-nom {
+  font-size:14px; font-weight:600; margin-bottom:4px;
+  display:flex; align-items:center; gap:8px; color:var(--texte);
+}
+.alt-card-desc { font-size:13px; color:var(--texte3); line-height:1.4; }
 .alt-card-foot { display:flex; align-items:center; gap:6px; margin-top:8px; }
-
-/* ─── SCORE ET TAGS ─── */
-.score-bar { display:flex; align-items:center; gap:8px; margin:10px 0; }
-.score-circle {
-  width:48px; height:48px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  font-size:14px; font-weight:700; flex-shrink:0;
-  border:2px solid currentColor;
+.score-badge {
+  font-size:11px; font-weight:700; width:22px; height:22px;
+  border-radius:50%; display:inline-flex; align-items:center; justify-content:center;
 }
-.score-circle.rouge { color:var(--rouge); background:var(--rouge-bg); }
-.score-circle.orange { color:var(--orange); background:var(--orange-bg); }
-.score-circle.vert { color:var(--vert); background:var(--vert-bg); }
-.tag-list { display:flex; gap:4px; flex-wrap:wrap; margin:6px 0; }
-.tag {
-  font-size:10px; padding:2px 8px; border-radius:10px;
-  font-weight:600; text-transform:uppercase; letter-spacing:.05em;
-}
-.tag.multinationale { background:var(--rouge-bg); color:var(--rouge); }
-.tag.indie-washing   { background:#FDF3E7; color:#7A3B0A; }
-.tag.sanitaire       { background:#FCEAEA; color:#8B0000; }
-.tag.juridique       { background:#FFF3CD; color:#856404; }
-.tag.social          { background:#E8F4FD; color:#0C5460; }
-.tag.indépendant     { background:var(--vert-bg); color:var(--vert); }
-.tag.dominant        { background:var(--rouge-bg); color:var(--rouge); }
-.tag.ultra-dominant  { background:var(--rouge-bg); color:var(--rouge); }
-.reasons-list { font-size:12px; color:var(--texte2); margin:6px 0; }
-.reasons-list li { margin-bottom:3px; }
-.fake-artisan-badge {
-  background:#7A3B0A; color:#FDF3E7;
-  font-size:11px; font-weight:700; padding:4px 10px;
-  border-radius:20px; display:inline-block; margin-bottom:8px;
-}
-.score-badge { font-size:11px; font-weight:700; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; }
-.score-badge.A { background:var(--vert-bg); color:var(--vert); }
-.score-badge.B { background:var(--bleu-bg); color:var(--bleu); }
+.score-badge.A { background:rgba(39,174,96,.15); color:var(--vert); }
+.score-badge.B { background:rgba(100,180,255,.15); color:#64b4ff; }
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════════
-     PAGE 1 : RECHERCHE
-══════════════════════════ -->
-<div class="page active" id="page-recherche">
+<!-- ══════════════════════
+     PAGE ACCUEIL
+══════════════════════ -->
+<div class="page active" id="page-accueil">
+  <div class="accueil-inner">
 
-  <div class="page-header">
-    <div style="text-align:center;padding:4px 0 8px">
-      <img src="logo.png" alt="TraceThat" style="height:44px;object-fit:contain;">
+    <div class="accueil-logo">
+      <img src="logo.png" alt="TraceThat">
+      <span class="logo-badge">Beta</span>
     </div>
-    <div class="page-sub" style="text-align:center">Qui possède vraiment ce que vous achetez ?</div>
-    <div class="stats-row">
-      <div class="stat-chip"><strong id="stat-rouge">—</strong> alertes multinationales</div>
-      <div class="stat-chip g"><strong>31</strong> alternatives locales</div>
-    </div>
-  </div>
 
-  <div class="search-wrap">
-    <div class="search-inner">
-      <span class="si-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      </span>
-      <input type="text" id="searchInput" placeholder="Siggi's, Innocent, Cochonou, Évian…" autocomplete="off" autocorrect="off" spellcheck="false">
-      <button class="si-clear" id="clearBtn" onclick="clearSearch()">&#215;</button>
-    </div>
-  </div>
+    <div class="hero">
+      <div class="hero-eyebrow">Indie washing</div>
+      <h1 class="hero-title">
+        Qui se cache<br>
+        <em>vraiment</em><br>
+        derrière votre marque ?
+      </h1>
+      <p class="hero-sub">
+        Scannez un produit et découvrez le groupe industriel qui se cache derrière l'image artisanale.
+      </p>
 
-  <div class="scroll-content">
-    <div class="filtres">
-      <div class="chip active"   onclick="setFilter(this,'all')">Tous</div>
-      <div class="chip"          onclick="setFilter(this,'rouge')">&#x26A0; Multinationales</div>
-      <div class="chip o"        onclick="setFilter(this,'orange')">À surveiller</div>
-      <div class="chip v"        onclick="setFilter(this,'vert')">&#10003; Indépendants</div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">30</span>
+        <span class="hero-stat-label">groupes contrôlent<br>80% de ce que vous mangez</span>
+      </div>
+
+      <div class="cta-scan">
+        <button class="btn-primary" onclick="showPage('scan')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h.01M18 14h.01M14 18h.01M18 18h.01M14 21h4M21 14v4"/></svg>
+          Scanner un produit
+        </button>
+        <button class="btn-secondary" onclick="showPage('recherche')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          Rechercher une marque
+        </button>
+      </div>
     </div>
-    <div id="liste"></div>
+
+    <div class="exemples">
+      <div class="exemples-title">Exemples d'indie washing</div>
+      <div class="exemples-list" id="exemples-list"></div>
+    </div>
+
   </div>
 </div>
 
-<!-- ══════════════════════════
-     PAGE 2 : SCAN
-══════════════════════════ -->
-<div class="page" id="page-scan">
-
-  <div class="page-header">
-    <div class="page-title">Scanner un produit</div>
-    <div class="page-sub">Pointez la caméra vers le code-barres</div>
+<!-- ══════════════════════
+     PAGE RECHERCHE
+══════════════════════ -->
+<div class="page" id="page-recherche">
+  <div class="search-header">
+    <div class="search-header-top">
+      <button class="search-back" onclick="showPage('accueil')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Retour
+      </button>
+    </div>
+    <div class="search-wrap-inner">
+      <span class="si-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </span>
+      <input type="text" id="searchInput" placeholder="Innocent, Siggi's, Évian…" autocomplete="off" autocorrect="off" spellcheck="false">
+      <button class="si-clear" id="clearBtn" onclick="clearSearch()">&#215;</button>
+    </div>
+    <div class="filtres-scroll">
+      <div class="chip active" onclick="setFilter(this,'all')">Tous</div>
+      <div class="chip" onclick="setFilter(this,'rouge')">⚠ Multinationales</div>
+      <div class="chip o" onclick="setFilter(this,'orange')">À surveiller</div>
+      <div class="chip v" onclick="setFilter(this,'vert')">✓ Indépendants</div>
+    </div>
   </div>
+  <div class="scroll-content" id="liste"></div>
+</div>
 
+<!-- ══════════════════════
+     PAGE SCAN
+══════════════════════ -->
+<div class="page" id="page-scan">
   <div class="scan-zone" id="scanZone">
     <video id="scan-video" autoplay playsinline muted></video>
     <div class="scan-overlay">
@@ -333,35 +589,32 @@ body {
         <div class="c1"></div><div class="c2"></div>
         <div class="scan-line"></div>
       </div>
-      <div class="scan-hint">Centrez le code-barres dans le cadre</div>
+      <div class="scan-hint">Pointez vers un code-barres</div>
     </div>
   </div>
-
   <div class="scan-controls">
     <div class="scan-input-row">
-      <input type="number" id="barcodeInput" placeholder="Ou saisir le code-barres manuellement" inputmode="numeric">
+      <input type="number" id="barcodeInput" placeholder="Saisir le code-barres" inputmode="numeric">
       <button class="btn-scan-lookup" onclick="lookupBarcode(document.getElementById('barcodeInput').value)">OK</button>
     </div>
     <div class="scan-status" id="scanStatus">Caméra en attente…</div>
   </div>
 </div>
 
-<!-- ══════════════════════════
-     PAGE 3 : ALTERNATIVES
-══════════════════════════ -->
+<!-- ══════════════════════
+     PAGE ALTERNATIVES
+══════════════════════ -->
 <div class="page" id="page-alternatives">
-
-  <div class="page-header">
-    <div class="page-title">Alternatives locales</div>
-    <div class="page-sub">31 producteurs indépendants sélectionnés</div>
+  <div class="page-header-dark">
+    <div class="page-title-dark">Alternatives <span>locales</span></div>
+    <div class="page-sub-dark">Producteurs indépendants sélectionnés</div>
   </div>
-
   <div class="scroll-content" id="alts-content"></div>
 </div>
 
-<!-- ══════════════════════════
-     RÉSULTAT SCAN (sheet)
-══════════════════════════ -->
+<!-- ══════════════════════
+     RÉSULTAT SCAN
+══════════════════════ -->
 <div class="scan-result" id="scanResult" style="display:none" onclick="closeScanResult(event)">
   <div class="scan-result-sheet" onclick="event.stopPropagation()">
     <div class="sheet-handle"></div>
@@ -369,13 +622,13 @@ body {
   </div>
 </div>
 
-<!-- ══════════════════════════
+<!-- ══════════════════════
      TAB BAR
-══════════════════════════ -->
+══════════════════════ -->
 <nav class="tab-bar">
-  <button class="tab active" id="tab-recherche" onclick="showPage('recherche')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    Rechercher
+  <button class="tab active" id="tab-accueil" onclick="showPage('accueil')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Accueil
   </button>
 
   <div class="tab tab-scan">
@@ -386,18 +639,15 @@ body {
   </div>
 
   <button class="tab" id="tab-alternatives" onclick="showPage('alternatives')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a10 10 0 0 1 0 20A10 10 0 0 1 12 2"/><path d="M12 6v6l4 2"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2"/><path d="M8 12h8M12 8v8"/></svg>
     Alternatives
   </button>
 </nav>
 
-<!-- ══════════════════════════
-     SCRIPTS
-══════════════════════════ -->
 <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js"></script>
 <script>
-// ─── BASE DE DONNÉES ──────────────────────────────────────────────────────────
-const DB = {};
+// ─── DB (chargée depuis chunks) ───────────────────────────────────────────────
+const DB   = {};
 const ALTS = {};
 
 const TAG_LABELS = {
@@ -424,9 +674,17 @@ const CAT_MAP = {
 const GROUPE_CAT = {
   lactalis:'produits_laitiers', danone:'produits_laitiers', sodiaal:'produits_laitiers',
   unilever:'condiments', mondelez:'biscuits', ferrero:'chocolat',
-  pepsico:'jus_fruits', 'coca-cola':'cafe', 'jde peets':'cafe',
-  'sigma alimentos':'charcuterie', 'campofrío':'charcuterie'
+  pepsico:'jus_fruits', 'coca-cola':'cafe', 'jde-peets':'cafe',
+  sigma:'charcuterie'
 };
+
+// Exemples indie washing
+const EXEMPLES_IW = [
+  { marque:"Siggi's", groupe:"Lactalis", pays:"France (privé)", key:"siggi's" },
+  { marque:"Innocent", groupe:"Coca-Cola Co.", pays:"USA", key:"innocent" },
+  { marque:"Ben & Jerry's", groupe:"Unilever", pays:"UK/Pays-Bas", key:"ben & jerry's" },
+  { marque:"Grom", groupe:"Unilever", pays:"UK/Pays-Bas", key:"grom" },
+];
 
 // ─── ÉTAT ────────────────────────────────────────────────────────────────────
 let currentFilter = 'all';
@@ -434,28 +692,76 @@ let currentSearch = '';
 let openCard = null;
 let scanActive = false;
 let barcodeReader = null;
+let dbLoaded = false;
+
+// ─── CHARGEMENT DB ───────────────────────────────────────────────────────────
+const chunks = ['db_0.json','db_1.json','db_2.json','db_3.json',
+  'db_4.json','db_5.json','db_6.json','db_7.json'];
+
+Promise.all([
+  ...chunks.map(f => fetch(f).then(r => r.json())),
+  fetch('db_alts.json').then(r => r.json())
+]).then(results => {
+  results.slice(0,-1).forEach(chunk => Object.assign(DB, chunk));
+  Object.assign(ALTS, results[results.length-1]);
+  dbLoaded = true;
+  renderExemples();
+  if (document.getElementById('page-recherche').classList.contains('active')) renderListe();
+  if (document.getElementById('page-alternatives').classList.contains('active')) renderAltsPage();
+  // Mettre à jour stat
+  const rouge = Object.values(DB).filter(m => m.niveau === 'rouge').length;
+  const statEl = document.querySelector('.hero-stat-num');
+  if (statEl) statEl.textContent = rouge > 0 ? rouge.toLocaleString() : '30';
+}).catch(e => console.warn('DB load error:', e));
 
 // ─── NAVIGATION ──────────────────────────────────────────────────────────────
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
+  const page = document.getElementById('page-' + name);
+  if (page) page.classList.add('active');
   const tabEl = document.getElementById('tab-' + name);
   if (tabEl) tabEl.classList.add('active');
 
-  if (name === 'scan') {
-    startScan();
-  } else {
-    stopScan();
-  }
-  if (name === 'alternatives') {
-    renderAltsPage();
-  }
+  if (name === 'scan') startScan();
+  else stopScan();
+  if (name === 'alternatives') renderAltsPage();
+  if (name === 'recherche') { renderListe(); setTimeout(()=>document.getElementById('searchInput').focus(), 300); }
+}
+
+// ─── EXEMPLES INDIE WASHING ───────────────────────────────────────────────────
+function renderExemples() {
+  const el = document.getElementById('exemples-list');
+  if (!el) return;
+  el.innerHTML = EXEMPLES_IW.map(e => `
+    <div class="exemple-card" onclick="quickOpenMarque('${e.key}')">
+      <div class="exemple-dot"></div>
+      <div class="exemple-info">
+        <div class="exemple-marque">${e.marque}</div>
+        <div class="exemple-groupe">${e.groupe} · ${e.pays}</div>
+      </div>
+      <span class="exemple-reveal">Voir</span>
+    </div>`).join('');
+}
+
+function quickOpenMarque(key) {
+  showPage('recherche');
+  setTimeout(() => {
+    document.getElementById('searchInput').value = key;
+    currentSearch = key;
+    renderListe();
+    setTimeout(() => {
+      const safeId = 'card-' + key.replace(/[^a-z0-9]/g,'_');
+      const el = document.getElementById(safeId);
+      if (el) el.click();
+    }, 300);
+  }, 100);
 }
 
 // ─── HELPERS RENDU ───────────────────────────────────────────────────────────
 function getAltCat(key) {
   const d = DB[key];
+  if (!d) return null;
   const txt = ((d.nom_affichage||'') + ' ' + (d.groupe||'') + ' ' + (d.categorie||'')).toLowerCase();
   for (const [kw,cat] of Object.entries(CAT_MAP)) if (txt.includes(kw)) return cat;
   return GROUPE_CAT[d.groupe] || null;
@@ -479,7 +785,7 @@ function renderAltItems(cat, max) {
 function renderCard(key) {
   const d = DB[key];
   const niv = d.niveau || 'inconnu';
-  const nivLabel = {rouge:'ALERTE multinational', orange:'À surveiller', vert:'Indépendant', inconnu:'?'}[niv];
+  const nivLabel = {rouge:'⚠ MULTINATIONAL', orange:'À surveiller', vert:'Indépendant', inconnu:'?'}[niv];
 
   const chaineHTML = (d.chaine||[]).map((c,i) => {
     const isLast = i === (d.chaine.length-1);
@@ -492,37 +798,24 @@ function renderCard(key) {
     <div class="chain-row"><span class="clbl">Pays</span><span class="cval o">${d.groupe_pays||''}</span></div>` : '';
 
   const apparence = d.apparence ? `<div class="apparence">Image projetée : "${d.apparence}"</div>` : '';
+  const sanctions = d.sanctions ? `<div class="sanctions">⚠ ${d.sanctions}</div>` : '';
 
-  // Score cercle
+  const fakeHTML = d.fake_artisan ? `<div class="fake-artisan-badge">⚠ Indie washing détecté</div>` : '';
+
   const scoreVal = d.score || 0;
   const scoreClass = scoreVal < 40 ? 'rouge' : scoreVal < 70 ? 'orange' : 'vert';
   const scoreHTML = d.score !== undefined ? `
     <div class="score-bar">
       <div class="score-circle ${scoreClass}">${scoreVal}</div>
-      <div style="flex:1;font-size:12px;color:var(--texte2)">
-        Score de transparence TraceThat
+      <div style="flex:1">
+        <div class="tag-list">${(d.tags||[]).map(t=>`<span class="tag ${t}">${t}</span>`).join('')}</div>
+        <ul class="reasons-list">${(d.reasons||[]).map(r=>`<li>→ ${r}</li>`).join('')}</ul>
       </div>
     </div>` : '';
 
-  // Fake artisan badge
-  const fakeHTML = d.fake_artisan ? `<div class="fake-artisan-badge">⚠ Indie washing détecté</div>` : '';
-
-  // Tags
-  const tagsHTML = (d.tags||[]).length ? `
-    <div class="tag-list">
-      ${(d.tags||[]).map(t => `<span class="tag ${t}">${t}</span>`).join('')}
-    </div>` : '';
-
-  // Reasons
-  const reasonsHTML = (d.reasons||[]).length ? `
-    <ul class="reasons-list">
-      ${(d.reasons||[]).map(r => `<li>→ ${r}</li>`).join('')}
-    </ul>` : '';
-  const sanctions = d.sanctions ? `<div class="sanctions">&#9888; ${d.sanctions}</div>` : '';
-
   const altCat = getAltCat(key);
   const altsHTML = (niv==='rouge'||niv==='orange') && altCat ? `
-    <div class="alt-hdr">&#10003; Alternatives locales</div>
+    <div class="alt-hdr">✓ Alternatives locales</div>
     ${renderAltItems(altCat, 3)}` : '';
 
   const safeId = 'card-'+key.replace(/[^a-z0-9]/g,'_');
@@ -533,10 +826,10 @@ function renderCard(key) {
         <div class="mcard-nom">${d.nom_affichage}</div>
         <div class="mcard-grp">${nivLabel}${d.groupe_nom?' · '+d.groupe_nom:''}</div>
       </div>
-      <span class="mcard-arr">&#9656;</span>
+      <span class="mcard-arr">▶</span>
     </div>
     <div class="mcard-detail">
-      ${fakeHTML}${scoreHTML}${tagsHTML}${reasonsHTML}${apparence}${chaineHTML}${groupeHTML}${sanctions}${altsHTML}
+      ${fakeHTML}${scoreHTML}${apparence}${chaineHTML}${groupeHTML}${sanctions}${altsHTML}
     </div>
   </div>`;
 }
@@ -550,47 +843,51 @@ function toggleCard(el) {
 
 // ─── PAGE RECHERCHE ───────────────────────────────────────────────────────────
 function renderListe() {
+  if (!dbLoaded) {
+    document.getElementById('liste').innerHTML = '<div class="empty"><div class="empty-ico">⏳</div><div>Chargement…</div></div>';
+    return;
+  }
   const q = currentSearch.toLowerCase().trim();
   let keys = Object.keys(DB);
   if (currentFilter !== 'all') keys = keys.filter(k => DB[k].niveau === currentFilter);
   if (q) keys = keys.filter(k => {
     const d = DB[k];
-    return k.includes(q)
-      || (d.nom_affichage||'').toLowerCase().includes(q)
-      || (d.groupe_nom||'').toLowerCase().includes(q)
-      || (d.apparence||'').toLowerCase().includes(q);
+    return k.includes(q) || (d.nom_affichage||'').toLowerCase().includes(q)
+      || (d.groupe_nom||'').toLowerCase().includes(q) || (d.apparence||'').toLowerCase().includes(q);
   });
 
   document.getElementById('clearBtn').style.display = q ? 'block' : 'none';
 
-  if (keys.length === 0) {
-    document.getElementById('liste').innerHTML = `<div class="empty">
-      <div class="empty-ico">&#128269;</div>
-      <div style="font-weight:600;margin-bottom:6px;">"${q}" introuvable</div>
-      <div style="font-size:13px;">Scanne le code-barres pour une recherche directe</div>
-    </div>`;
-    return;
-  }
-
-  if (!q) {
-    const top = keys.filter(k=>DB[k].niveau==='rouge').slice(0,8);
+  if (!q && currentFilter === 'all') {
+    const top = keys.filter(k=>DB[k].niveau==='rouge' && DB[k].chaine?.length > 1).slice(0,8);
     const grid = top.map(k=>`<div class="qbtn" onclick="quickSearch('${k}')">
-      <div class="qbtn-nom">${DB[k].nom_affichage.split(' (')[0]}</div>
-      <div class="qbtn-grp">${DB[k].groupe_nom}</div>
+      <div class="qbtn-nom">${DB[k].nom_affichage.split(' (')[0].substring(0,20)}</div>
+      <div class="qbtn-grp">${DB[k].groupe_nom||''}</div>
     </div>`).join('');
 
     document.getElementById('liste').innerHTML =
       `<div class="slbl">Marques à surveiller</div>
        <div class="quick-grid">${grid}</div>
-       <div class="slbl">Base complète (${keys.length} marques)</div>
-       ${keys.map(k=>renderCard(k)).join('')}`;
-  } else {
-    document.getElementById('liste').innerHTML =
-      `<div class="slbl">${keys.length} résultat${keys.length>1?'s':''} pour "${q}"</div>
-       ${keys.map(k=>renderCard(k)).join('')}`;
-    if (keys.length === 1)
-      setTimeout(()=>{ const el=document.getElementById('card-'+keys[0].replace(/[^a-z0-9]/g,'_')); if(el)el.click(); },150);
+       <div class="slbl">Base complète (${keys.length.toLocaleString()} marques)</div>
+       ${keys.slice(0,50).map(k=>renderCard(k)).join('')}
+       ${keys.length > 50 ? `<div class="empty" style="padding:1rem"><div style="font-size:13px">Utilisez la recherche pour trouver une marque spécifique</div></div>` : ''}`;
+    return;
   }
+
+  if (keys.length === 0) {
+    document.getElementById('liste').innerHTML = `<div class="empty">
+      <div class="empty-ico">🔍</div>
+      <div style="font-weight:600;margin-bottom:6px">"${q}" introuvable</div>
+      <div style="font-size:13px">Scanne le code-barres pour une recherche directe</div>
+    </div>`;
+    return;
+  }
+
+  document.getElementById('liste').innerHTML =
+    `<div class="slbl">${keys.length} résultat${keys.length>1?'s':''} pour "${q}"</div>
+     ${keys.slice(0,100).map(k=>renderCard(k)).join('')}`;
+  if (keys.length === 1)
+    setTimeout(()=>{ const el=document.getElementById('card-'+keys[0].replace(/[^a-z0-9]/g,'_')); if(el)el.click(); },150);
 }
 
 function quickSearch(key) {
@@ -620,11 +917,12 @@ document.getElementById('searchInput').addEventListener('input', function() {
 // ─── PAGE ALTERNATIVES ────────────────────────────────────────────────────────
 function renderAltsPage() {
   const container = document.getElementById('alts-content');
+  if (!dbLoaded) { container.innerHTML = '<div class="empty"><div class="empty-ico">⏳</div><div>Chargement…</div></div>'; return; }
   const cats = Object.keys(ALTS);
-  container.innerHTML = cats.map(cat => {
+  container.innerHTML = '<div style="padding:12px 16px">' + cats.map(cat => {
     const items = (ALTS[cat]||[]).map(a => {
       const tags = (a.tags||[]).slice(0,3).map(t=>`<span class="atag">${TAG_LABELS[t]||t}</span>`).join('');
-      const lien = a.url ? `<a href="${a.url}" target="_blank" style="font-size:11px;color:var(--bleu);margin-left:auto">Voir &#8599;</a>` : '';
+      const lien = a.url ? `<a href="${a.url}" target="_blank" style="font-size:11px;color:#64b4ff;margin-left:auto">Voir ↗</a>` : '';
       return `<div class="alt-card">
         <div class="alt-card-nom">
           <span class="score-badge ${a.score}">${a.score}</span>
@@ -637,12 +935,11 @@ function renderAltsPage() {
         </div>
       </div>`;
     }).join('');
-
     return `<div class="cat-section">
       <div class="cat-title"><span class="cat-badge"></span>${CAT_LABELS[cat]||cat}</div>
       ${items}
     </div>`;
-  }).join('');
+  }).join('') + '</div>';
 }
 
 // ─── SCAN CODE-BARRES ─────────────────────────────────────────────────────────
@@ -650,13 +947,9 @@ async function startScan() {
   const status = document.getElementById('scanStatus');
   const video  = document.getElementById('scan-video');
   if (scanActive) return;
-
-  // Vérifier support caméra
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    status.textContent = 'Caméra non disponible sur ce navigateur.';
-    return;
+    status.textContent = 'Caméra non disponible.'; return;
   }
-
   try {
     status.textContent = 'Activation caméra…';
     const stream = await navigator.mediaDevices.getUserMedia({
@@ -664,47 +957,29 @@ async function startScan() {
     });
     video.srcObject = stream;
     scanActive = true;
-    status.textContent = 'Caméra active — pointez vers un code-barres';
-
-    // Démarrer ZXing si disponible
+    status.textContent = 'Caméra active';
     if (window.ZXing) {
       const hints = new Map();
-      const formats = [
-        ZXing.BarcodeFormat.EAN_13,
-        ZXing.BarcodeFormat.EAN_8,
-        ZXing.BarcodeFormat.CODE_128,
-        ZXing.BarcodeFormat.UPC_A,
-        ZXing.BarcodeFormat.UPC_E,
-        ZXing.BarcodeFormat.QR_CODE,
-      ];
+      const formats = [ZXing.BarcodeFormat.EAN_13, ZXing.BarcodeFormat.EAN_8, ZXing.BarcodeFormat.CODE_128, ZXing.BarcodeFormat.UPC_A];
       hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, formats);
       barcodeReader = new ZXing.BrowserMultiFormatReader(hints);
-
       barcodeReader.decodeFromVideoElement(video, (result, err) => {
-        if (result) {
+        if (result && scanActive) {
           const code = result.getText();
-          status.textContent = `Code détecté : ${code}`;
-          if (scanActive) {
-            lookupBarcode(code);
-          }
+          status.textContent = `Code : ${code}`;
+          lookupBarcode(code);
         }
       });
-    } else {
-      status.textContent = 'Caméra active. Saisissez le code-barres manuellement si ZXing ne charge pas.';
     }
   } catch(e) {
-    status.textContent = 'Accès caméra refusé. Utilisez la saisie manuelle.';
-    console.warn('Caméra:', e);
+    status.textContent = 'Accès caméra refusé. Saisie manuelle.';
   }
 }
 
 function stopScan() {
   if (barcodeReader) { try { barcodeReader.reset(); } catch(e){} barcodeReader = null; }
   const video = document.getElementById('scan-video');
-  if (video.srcObject) {
-    video.srcObject.getTracks().forEach(t=>t.stop());
-    video.srcObject = null;
-  }
+  if (video.srcObject) { video.srcObject.getTracks().forEach(t=>t.stop()); video.srcObject = null; }
   scanActive = false;
 }
 
@@ -712,46 +987,30 @@ function stopScan() {
 async function lookupBarcode(code) {
   if (!code || code.toString().length < 4) return;
   code = code.toString().trim();
-
-  // Chercher d'abord dans la base locale (par code-barres ou marque approchante)
   const status = document.getElementById('scanStatus');
   status.textContent = `Recherche ${code}…`;
-
-  // Appel Open Food Facts (si en ligne)
   try {
     const url = `https://world.openfoodfacts.org/api/v2/product/${code}.json`;
     const resp = await fetch(url);
     const data = await resp.json();
-
     if (data.status === 1 && data.product) {
       const p = data.product;
       const brandRaw = (p.brands || '').split(',')[0].trim().toLowerCase();
       const nomProduit = p.product_name || p.product_name_fr || code;
       const imageUrl   = p.image_front_small_url || p.image_small_url || '';
       const nutriscore = p.nutriscore_grade ? p.nutriscore_grade.toUpperCase() : '';
-
-      // Chercher dans DB locale
       const dbKey = Object.keys(DB).find(k =>
-        brandRaw.includes(k) || k.includes(brandRaw) ||
-        DB[k].nom_affichage.toLowerCase().includes(brandRaw)
+        brandRaw.includes(k) || k.includes(brandRaw) || DB[k].nom_affichage.toLowerCase().includes(brandRaw)
       );
-
-      showScanResult({
-        code, nomProduit, brandRaw, imageUrl, nutriscore,
-        dbEntry: dbKey ? DB[dbKey] : null,
-        dbKey,
-        off: { categories: p.categories_tags || [] }
-      });
-      status.textContent = `Produit trouvé : ${nomProduit}`;
+      showScanResult({ code, nomProduit, brandRaw, imageUrl, nutriscore, dbEntry: dbKey ? DB[dbKey] : null, dbKey, off: { product: p } });
+      status.textContent = `Produit trouvé`;
     } else {
-      // Produit pas dans OFF — chercher quand même dans DB locale
       const dbKey = Object.keys(DB).find(k => code.toLowerCase().includes(k) || k.includes(code.toLowerCase()));
-      showScanResult({ code, nomProduit: `Code : ${code}`, brandRaw:'', dbEntry: dbKey?DB[dbKey]:null, dbKey, off:null });
+      showScanResult({ code, nomProduit:`Code : ${code}`, brandRaw:'', dbEntry: dbKey?DB[dbKey]:null, dbKey, off:null });
       status.textContent = 'Produit non trouvé dans Open Food Facts.';
     }
   } catch(e) {
-    // Hors ligne — chercher dans DB locale uniquement
-    status.textContent = 'Mode hors-ligne — base locale uniquement.';
+    status.textContent = 'Mode hors-ligne.';
     showScanResult({ code, nomProduit:`Code: ${code}`, brandRaw:'', dbEntry:null, dbKey:null, off:null });
   }
 }
@@ -759,51 +1018,73 @@ async function lookupBarcode(code) {
 function showScanResult({ code, nomProduit, brandRaw, imageUrl, nutriscore, dbEntry, dbKey, off }) {
   const sheet = document.getElementById('scanResultContent');
   const d = dbEntry;
+  const offProduct = off?.product || null;
 
-  let nivBadge = '', chainHTML = '', sanctHTML = '', altsHTML = '';
+  // Score enrichi depuis DB ou calculé depuis OFF
+  function computeScanScore(dbEntry, offProduct) {
+    if (dbEntry && dbEntry.score !== undefined) return { score: dbEntry.score, reasons: dbEntry.reasons||[], tags: dbEntry.tags||[] };
+    if (!offProduct) return null;
+    let score = 100, reasons = [], tags = [];
+    const additives = offProduct.additives_tags || [];
+    if (additives.length > 5) { score -= 15; tags.push('additifs'); reasons.push(`${additives.length} additifs détectés`); }
+    else if (additives.length > 0) { score -= 5; reasons.push(`${additives.length} additif(s)`); }
+    const sugar = offProduct.nutriments?.sugars_100g || 0;
+    if (sugar > 15) { score -= 10; reasons.push(`Sucre élevé (${sugar}g/100g)`); }
+    const nova = offProduct.nova_group || 0;
+    if (nova === 4) { score -= 20; tags.push('ultra-transformé'); reasons.push('Ultra-transformé (NOVA 4)'); }
+    else if (nova === 3) { score -= 10; reasons.push('Très transformé (NOVA 3)'); }
+    return { score: Math.max(0, Math.min(100, score)), reasons, tags };
+  }
+
+  const scoreData = computeScanScore(d, offProduct);
+  let nivBadge = '', chainHTML = '', sanctHTML = '', altsHTML = '', scoreHTML = '';
+
+  if (scoreData) {
+    const sc = scoreData.score;
+    const scClass = sc < 40 ? 'rouge' : sc < 70 ? 'orange' : 'vert';
+    const tagsHTML = (scoreData.tags||[]).map(t => `<span class="tag ${t}">${t}</span>`).join('');
+    const reasonsHTML = (scoreData.reasons||[]).map(r => `<li>→ ${r}</li>`).join('');
+    scoreHTML = `<div class="score-bar" style="margin:10px 0">
+      <div class="score-circle ${scClass}">${sc}</div>
+      <div style="flex:1;margin-left:10px">
+        <div class="tag-list">${tagsHTML}</div>
+        <ul class="reasons-list" style="margin:4px 0 0">${reasonsHTML}</ul>
+      </div>
+    </div>`;
+  }
 
   if (d) {
     const niv = d.niveau || 'inconnu';
-    const nivTxt = {rouge:'⚠ MULTINATIONAL DÉTECTÉ', orange:'Å surveiller', vert:'✓ Indépendant', inconnu:'Non classifié'}[niv];
+    const nivTxt = {rouge:'⚠ MULTINATIONAL DÉTECTÉ', orange:'À surveiller', vert:'✓ Indépendant', inconnu:'Non classifié'}[niv];
     nivBadge = `<div class="sheet-niveau ${niv}">${nivTxt}</div>`;
-
     chainHTML = `<div style="margin-bottom:10px">` +
       (d.chaine||[]).map((c,i)=>{
         const lbl = i===0?'Origine':i===(d.chaine.length-1)?'Propriétaire':`Étape ${i}`;
-        const cls = i===(d.chaine.length-1)?'r':'';
-        return `<div class="chain-row"><span class="clbl">${lbl}</span><span class="cval ${cls}">${c}</span></div>`;
+        return `<div class="chain-row"><span class="clbl">${lbl}</span><span class="cval ${i===(d.chaine.length-1)?'r':''}">${c}</span></div>`;
       }).join('') +
       (d.groupe_nom?`<div class="chain-row"><span class="clbl">Groupe</span><span class="cval r">${d.groupe_nom}${d.groupe_ca_mds?' — '+d.groupe_ca_mds+' Mds€':''}</span></div>`:'') +
       (d.groupe_pays?`<div class="chain-row"><span class="clbl">Pays</span><span class="cval o">${d.groupe_pays}</span></div>`:'') +
       `</div>`;
-
-    if (d.sanctions) sanctHTML = `<div class="sanctions">&#9888; ${d.sanctions}</div>`;
-
+    if (d.sanctions) sanctHTML = `<div class="sanctions">⚠ ${d.sanctions}</div>`;
     const altCat = getAltCat(dbKey);
     if ((niv==='rouge'||niv==='orange') && altCat) {
-      altsHTML = `<div class="alt-hdr">&#10003; Alternatives locales</div>${renderAltItems(altCat, 3)}`;
+      altsHTML = `<div class="alt-hdr">✓ Alternatives locales</div>${renderAltItems(altCat, 3)}`;
     }
   } else {
-    nivBadge = `<div class="sheet-niveau inconnu">Non classifié — marque inconnue</div>`;
-    chainHTML = `<div style="font-size:13px;color:var(--texte3);margin-bottom:10px;">
-      Marque "<strong>${brandRaw||code}</strong>" non trouvée dans la base locale.<br>
-      Lance <code>python3 tracethat_enricher.py --full</code> pour enrichir.
-    </div>`;
+    nivBadge = `<div class="sheet-niveau inconnu">Non classifié</div>`;
+    chainHTML = `<div style="font-size:13px;color:var(--texte3);margin-bottom:10px">Marque "<strong>${brandRaw||code}</strong>" non trouvée dans la base.</div>`;
   }
 
-  const imgHTML = imageUrl ? `<img src="${imageUrl}" style="width:60px;height:60px;object-fit:contain;border-radius:8px;border:1px solid var(--border);float:right;margin:0 0 8px 12px">` : '';
+  const imgHTML = imageUrl ? `<img src="${imageUrl}" style="width:56px;height:56px;object-fit:contain;border-radius:8px;border:1px solid var(--border);float:right;margin:0 0 8px 12px">` : '';
+  const fakeHTML = d?.fake_artisan ? `<div class="fake-artisan-badge">⚠ Indie washing détecté</div>` : '';
 
   sheet.innerHTML = `
-    <button class="sheet-close" onclick="closeScanResult()">&#215;</button>
+    <button class="sheet-close" onclick="closeScanResult()">✕</button>
     ${imgHTML}
     <div class="sheet-produit">${code}${nutriscore?' · Nutriscore '+nutriscore:''}</div>
     <div class="sheet-marque">${nomProduit}</div>
-    ${nivBadge}
-    ${chainHTML}
-    ${sanctHTML}
-    ${altsHTML}
-    <div style="clear:both"></div>
-  `;
+    ${nivBadge}${fakeHTML}${scoreHTML}${chainHTML}${sanctHTML}${altsHTML}
+    <div style="clear:both"></div>`;
 
   document.getElementById('scanResult').style.display = 'flex';
 }
@@ -811,25 +1092,12 @@ function showScanResult({ code, nomProduit, brandRaw, imageUrl, nutriscore, dbEn
 function closeScanResult(e) {
   if (!e || e.target === document.getElementById('scanResult')) {
     document.getElementById('scanResult').style.display = 'none';
-    document.getElementById('scanStatus').textContent = 'Prêt pour un nouveau scan';
+    document.getElementById('scanStatus').textContent = 'Prêt';
   }
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
-
-const chunks = ['db_0.json','db_1.json','db_2.json','db_3.json',
-  'db_4.json','db_5.json','db_6.json','db_7.json'];
-
-Promise.all([
-  ...chunks.map(f => fetch(f).then(r => r.json())),
-  fetch('db_alts.json').then(r => r.json())
-]).then(results => {
-  results.slice(0,-1).forEach(chunk => Object.assign(DB, chunk));
-  Object.assign(ALTS, results[results.length-1]);
-  renderListe();
-  renderAltsPage();
-});
-
+renderExemples();
 </script>
 </body>
 </html>
