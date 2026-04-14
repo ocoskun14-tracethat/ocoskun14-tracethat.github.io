@@ -583,7 +583,7 @@ body { font-family:'DM Sans', sans-serif; }
 ══════════════════════ -->
 <div class="page" id="page-scan">
   <div class="scan-zone" id="scanZone">
-    <video id="scan-video" autoplay playsinline muted style="display:none"></video>
+    <video id="scan-video" autoplay playsinline muted></video>
     <div class="scan-overlay">
       <div class="scan-frame">
         <div class="c1"></div><div class="c2"></div>
@@ -644,7 +644,7 @@ body { font-family:'DM Sans', sans-serif; }
   </button>
 </nav>
 
-<script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js"></script>
 <script>
 // ─── DB (chargée depuis chunks) ───────────────────────────────────────────────
 const DB   = {};
@@ -943,58 +943,58 @@ function renderAltsPage() {
 }
 
 // ─── SCAN CODE-BARRES ─────────────────────────────────────────────────────────
-function startScan() {
+async function startScan() {
   const status = document.getElementById('scanStatus');
+  const video  = document.getElementById('scan-video');
   if (scanActive) return;
-  status.textContent = 'Activation caméra…';
-
-  Quagga.init({
-    inputStream: {
-      name: 'Live',
-      type: 'LiveStream',
-      target: document.getElementById('scanZone'),
-      constraints: {
-        facingMode: 'environment',
-        width: { ideal: 1280 },
-        height: { ideal: 720 }
-      }
-    },
-    decoder: {
-      readers: ['ean_reader', 'ean_8_reader', 'code_128_reader', 'upc_reader']
-    },
-    locate: true,
-  }, function(err) {
-    if (err) {
-      status.textContent = 'Caméra non disponible. Saisie manuelle.';
-      console.warn('Quagga init error:', err);
-      return;
-    }
+  if (!navigator.mediaDevices?.getUserMedia) {
+    status.textContent = 'Caméra non disponible.'; return;
+  }
+  try {
+    status.textContent = 'Activation caméra…';
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: 'environment' }, width:{ideal:1920}, height:{ideal:1080} }
+    });
+    video.srcObject = stream;
+    await video.play();
     scanActive = true;
     status.textContent = 'Caméra active — pointez vers un code-barres';
-    Quagga.start();
-  });
 
-  Quagga.onDetected(function(result) {
-    if (!scanActive) return;
-    const code = result.codeResult.code;
-    if (code && code.length >= 8) {
-      status.textContent = `Code détecté : ${code}`;
-      // Vibration feedback
-      if (navigator.vibrate) navigator.vibrate(100);
-      lookupBarcode(code);
+    if (window.ZXing) {
+      const codeReader = new ZXing.BrowserMultiFormatReader();
+      barcodeReader = codeReader;
+      
+      const scan = () => {
+        if (!scanActive) return;
+        codeReader.decodeFromVideoElement(video)
+          .then(result => {
+            if (result && scanActive) {
+              const code = result.getText();
+              status.textContent = `Code : ${code}`;
+              if (navigator.vibrate) navigator.vibrate(100);
+              scanActive = false;
+              lookupBarcode(code);
+            }
+          })
+          .catch(() => {
+            if (scanActive) setTimeout(scan, 300);
+          });
+      };
+      setTimeout(scan, 500);
     }
-  });
+  } catch(e) {
+    status.textContent = 'Accès caméra refusé — utilisez la saisie manuelle.';
+    console.warn('Camera:', e);
+  }
 }
 
 function stopScan() {
-  if (scanActive) {
-    try { Quagga.stop(); } catch(e) {}
-    scanActive = false;
-  }
-  // Cacher la vidéo Quagga
-  const video = document.querySelector('#scanZone video');
-  if (video && video.srcObject) {
+  scanActive = false;
+  if (barcodeReader) { try { barcodeReader.reset(); } catch(e){} barcodeReader = null; }
+  const video = document.getElementById('scan-video');
+  if (video?.srcObject) {
     video.srcObject.getTracks().forEach(t => t.stop());
+    video.srcObject = null;
   }
 }
 
