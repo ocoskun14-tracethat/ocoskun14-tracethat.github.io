@@ -757,14 +757,18 @@ function closeScanResult(e) {
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 
-fetch('tracethat_db.json')
-  .then(r => r.json())
-  .then(data => {
-    Object.assign(DB, data.marques);
-    Object.assign(ALTS, data.alternatives);
-    renderListe();
-    renderAltsPage();
-  });
+const chunks = ['db_0.json','db_1.json','db_2.json','db_3.json',
+  'db_4.json','db_5.json','db_6.json','db_7.json'];
+
+Promise.all([
+  ...chunks.map(f => fetch(f).then(r => r.json())),
+  fetch('db_alts.json').then(r => r.json())
+]).then(results => {
+  results.slice(0,-1).forEach(chunk => Object.assign(DB, chunk));
+  Object.assign(ALTS, results[results.length-1]);
+  renderListe();
+  renderAltsPage();
+});
 
 </script>
 </body>
