@@ -967,11 +967,13 @@ async function startScan() {
       
       const scan = () => {
         if (!scanActive) return;
-        codeReader.decodeFromVideoElement(video)
-          .then(result => {
+        codeReader.decodeFromConstraints(
+          { video: { facingMode: 'environment' } },
+          video,
+          (result, err) => {
             if (result && scanActive) {
               const code = result.getText();
-              status.textContent = `Code : ${code}`;
+              status.textContent = `Code détecté : ${code}`;
               if (navigator.vibrate) navigator.vibrate(100);
               scanActive = false;
               lookupBarcode(code);
