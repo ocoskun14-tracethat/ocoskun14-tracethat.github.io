@@ -710,8 +710,7 @@ Promise.all([
   if (document.getElementById('page-alternatives').classList.contains('active')) renderAltsPage();
   // Mettre à jour stat
   const rouge = Object.values(DB).filter(m => m.niveau === 'rouge').length;
-  const statEl = document.querySelector('.hero-stat-num');
-  if (statEl) statEl.textContent = rouge > 0 ? rouge.toLocaleString() : '30';
+  // stat fixe
 }).catch(e => console.warn('DB load error:', e));
 
 // ─── NAVIGATION ──────────────────────────────────────────────────────────────
