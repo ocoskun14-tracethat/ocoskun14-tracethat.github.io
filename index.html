@@ -700,7 +700,7 @@ let dbLoaded = false;
 
 // ─── CHARGEMENT DB ───────────────────────────────────────────────────────────
 const chunks = ['db_0.json','db_1.json','db_2.json','db_3.json',
-  'db_4.json','db_5.json','db_6.json','db_7.json'];
+  'db_4.json','db_5.json','db_6.json','db_7.json','db_8.json'];
 
 Promise.all([
   ...chunks.map(f => fetch(f).then(r => r.json())),
