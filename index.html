@@ -684,9 +684,9 @@ const GROUPE_CAT = {
 
 // Exemples indie washing
 const EXEMPLES_IW = [
-  { marque:"Siggi's", groupe:"Lactalis", pays:"France (privé)", key:"siggis" },
+  { marque:"Siggi's", groupe:"Lactalis", pays:"France (privé)", key:"siggi's" },
   { marque:"Innocent", groupe:"Coca-Cola Co.", pays:"USA", key:"innocent" },
-  { marque:"Ben & Jerry's", groupe:"Unilever", pays:"UK/Pays-Bas", key:"ben-jerrys" },
+  { marque:"Ben & Jerry's", groupe:"Unilever", pays:"UK/Pays-Bas", key:"ben & jerry's" },
   { marque:"Grom", groupe:"Unilever", pays:"UK/Pays-Bas", key:"grom" },
 ];
 
@@ -752,6 +752,7 @@ function quickOpenMarque(key) {
   showPage('recherche');
   setTimeout(() => {
     document.getElementById('searchInput').value = key;
+    currentSearch = key;
     currentSearch = key;
     renderListe();
     setTimeout(() => {
