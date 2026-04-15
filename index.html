@@ -684,9 +684,9 @@ const GROUPE_CAT = {
 
 // Exemples indie washing
 const EXEMPLES_IW = [
-  { marque:"Siggi's", groupe:"Lactalis", pays:"France (privé)", key:"siggi's" },
+  { marque:"Siggi's", groupe:"Lactalis", pays:"France (privé)", key:"siggis" },
   { marque:"Innocent", groupe:"Coca-Cola Co.", pays:"USA", key:"innocent" },
-  { marque:"Ben & Jerry's", groupe:"Unilever", pays:"UK/Pays-Bas", key:"ben & jerry's" },
+  { marque:"Ben & Jerry's", groupe:"Unilever", pays:"UK/Pays-Bas", key:"ben-jerrys" },
   { marque:"Grom", groupe:"Unilever", pays:"UK/Pays-Bas", key:"grom" },
 ];
 
@@ -737,7 +737,7 @@ function renderExemples() {
   const el = document.getElementById('exemples-list');
   if (!el) return;
   el.innerHTML = EXEMPLES_IW.map(e => `
-    <div class="exemple-card" onclick="quickOpenMarque('${e.key}')">
+    <div class="exemple-card" onclick="quickOpenMarque(this.dataset.key)" data-key="${e.key}">
       <div class="exemple-dot"></div>
       <div class="exemple-info">
         <div class="exemple-marque">${e.marque}</div>
